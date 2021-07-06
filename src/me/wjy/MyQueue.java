@@ -61,6 +61,9 @@ public class MyQueue {
      * @return pop 之前的头节点
      */
     public Node pop() {
+        if (first == null) {
+            return null;
+        }
         Node node = first;
         first = first.right;
         size--;

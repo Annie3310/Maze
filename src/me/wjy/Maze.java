@@ -77,12 +77,15 @@ public class Maze {
      * 队列类
      */
     private static final MyQueue MY_QUEUE = new MyQueue();
-    //    private static int lengthOfShortestPath = 0;
+
+    private static final int OPTION1 = 1;
+    private static final int OPTION2 = 2;
 
     /**
      * 逃出迷宫,
+     *
      * @param index 索引包装类
-     * @param len 走过的长度 (并没有输入和参与计算, 只是用于判断是否为入口)
+     * @param len   走过的长度 (并没有输入和参与计算, 只是用于判断是否为入口)
      * @return
      */
     public static Index escape(Index index, int len) {
@@ -156,28 +159,18 @@ public class Maze {
     }
 
     private static boolean pushOrNot(Index index, char[][] maze) {
-        if (maze[index.getX()][index.getY()] == 0 && !INDEX_CONTAINER.containsKey(index)) {
+        boolean a = maze[index.getX()][index.getY()] == 0 || maze[index.getX()][index.getY()] == 48;
+        boolean b = !INDEX_CONTAINER.containsKey(index);
+
+        if (a && b) {
             MY_QUEUE.push(index);
             return true;
         }
         return false;
     }
 
-    public static void main(String[] args) {
-        // 询问用哪一个迷宫.
-        Scanner sc = new Scanner(System.in);
-        System.out.println("输入想要走的迷宫 (1 或 2), 输入其他字符都为 1:");
-        String flag = sc.next();
-        Index escape;
-        if ("1".equals(flag)) {
-            maze = MAZE_1;
-            escape = escape(new Index(0, 18), 0);
-        } else if ("2".equals(flag)) {
-            maze = MAZE_2;
-            escape = escape(new Index(0, 1), 0);
-        } else {
-            escape = escape(new Index(0, 18), 0);
-        }
+    private static void exec(Index index) {
+        Index escape = escape(index, 0);
         // 输入起点执行
         // 因为结果是倒着的路径, 所以用栈存储.
         Stack stack = new Stack();
@@ -194,5 +187,35 @@ public class Maze {
         while (!stack.empty()) {
             System.out.println(stack.pop());
         }
+        System.exit(0);
+    }
+
+    public static void main(String[] args) throws Exception {
+        // 询问用哪一个迷宫.
+        Scanner sc = new Scanner(System.in);
+        System.out.println("使用 txt 文件 (只支持 Windows CRLF 格式的换行) 输入迷宫还是使用内置迷宫? (1: txt 文件. 2: 内置迷宫):");
+        int mazeSelect = sc.nextInt();
+        if (OPTION1 == mazeSelect) {
+            System.out.println("输入文件的绝对路径: ");
+            String path = sc.next();
+            maze = GetMaze.get(path);
+            System.out.println("输入迷宫入口横坐标: ");
+            int x = sc.nextInt();
+            System.out.println("输入迷宫入口纵坐标: ");
+            int y = sc.nextInt();
+            exec(new Index(x, y));
+        }
+        System.out.println("输入想要走的迷宫 (1 或 2), 输入其他字符都为 1:");
+        int flag = sc.nextInt();
+        if (OPTION1 == flag) {
+            maze = MAZE_1;
+            exec(new Index(0, 18));
+        } else if (OPTION2 == flag) {
+            maze = MAZE_2;
+            exec(new Index(0, 1));
+        } else {
+            exec(new Index(0, 18));
+        }
+
     }
 }
