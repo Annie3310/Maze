@@ -24,16 +24,16 @@ public class IndexContainer {
      * @param y 横坐标
      * @return 存在则返回该节点, 不存在返回 null
      */
-    public Index containsKey(int x, int y) {
+    public boolean containsKey(int x, int y) {
         Set<Index> indices = hashMap.keySet();
         Iterator<Index> iterator = indices.iterator();
         while (iterator.hasNext()) {
             Index temp = iterator.next();
             if (temp.getX() == x && temp.getY() == y) {
-                return temp;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public boolean containsKey(Index index) {

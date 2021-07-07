@@ -123,34 +123,25 @@ public class Maze {
 
         // 当前格子的四个方向的引用
         Index right, bottom, left, top;
-        // 因为要判断四个方向的格子是否有被走过, 如果走过的话, 则可以从走过的格子的容器里面直接拿
-        // 而不用重新 new 对象, 如果没被走过, 再创建新的对象.
-        Index tempRight, tempBottom, tempLeft, tempTop;
 
-        // 走过的直接从容器里拿, 没走过的直接拿
-        tempRight = INDEX_CONTAINER.containsKey(index.getX(), index.getY() + 1);
-        tempBottom = INDEX_CONTAINER.containsKey(index.getX() + 1, index.getY());
-        tempLeft = INDEX_CONTAINER.containsKey(index.getX(), index.getY() - 1);
-        tempTop = INDEX_CONTAINER.containsKey(index.getX() - 1, index.getY());
-
-        // 再将四个方向的引用指向 tempX 完成赋值
-        right = tempRight == null ? index.getRight() : tempRight;
-        bottom = tempBottom == null ? index.getBottom() : tempBottom;
-        left = tempLeft == null ? index.getLeft() : tempLeft;
-        top = tempTop == null ? index.getTop() : tempTop;
+        // 从容器中找该方向的格子是否已经走过, 如果走过, 则该点就不需要考虑是否要加入队列
+        right = INDEX_CONTAINER.containsKey(index.getX(), index.getY() + 1) ? null : index.getRight();
+        bottom = INDEX_CONTAINER.containsKey(index.getX() + 1, index.getY()) ? null : index.getBottom();
+        left = INDEX_CONTAINER.containsKey(index.getX(), index.getY() - 1) ? null : index.getLeft();
+        top = INDEX_CONTAINER.containsKey(index.getX() - 1, index.getY()) ? null : index.getTop();
 
         // 判断该方向是否可以走 (是否为1), 如果可以走, 则将其加入队列, 等待递归
         // 并且将该方向的节点父节点的引用指向当前节点
-        if (pushOrNot(right, maze)) {
+        if (right != null && pushOrNot(right)) {
             right.setFather(index);
         }
-        if (pushOrNot(bottom, maze)) {
+        if (bottom != null && pushOrNot(bottom)) {
             bottom.setFather(index);
         }
-        if (pushOrNot(left, maze)) {
+        if (left != null && pushOrNot(left)) {
             left.setFather(index);
         }
-        if (pushOrNot(top, maze)) {
+        if (top != null && pushOrNot(top)) {
             top.setFather(index);
         }
 
@@ -162,20 +153,14 @@ public class Maze {
      * 决定是否加入队列, 如果目标位置是 0 且 没有走过, 则加入队列.
      *
      * @param index
-     * @param maze
      * @return
      */
-    private static boolean pushOrNot(Index index, char[][] maze) {
-        boolean a = maze[index.getX()][index.getY()] == 0 || maze[index.getX()][index.getY()] == 48;
-        boolean b = !INDEX_CONTAINER.containsKey(index);
-
-        if (a && b) {
+    private static boolean pushOrNot(Index index) {
+        if (maze[index.getX()][index.getY()] == 0 || maze[index.getX()][index.getY()] == 48) {
             MY_QUEUE.push(index);
             return true;
         }
-        // XXX 可能有错, 没测试
-        // 将 index 指向 null , 因为没有使用的必要了
-        index = null;
+        // TODO: 2021/7/7 如果是墙壁, 则销毁对象 
         return false;
     }
 
