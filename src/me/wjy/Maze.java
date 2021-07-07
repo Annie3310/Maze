@@ -158,6 +158,13 @@ public class Maze {
         return escape((Index) MY_QUEUE.pop().getElement(), ++len);
     }
 
+    /**
+     * 决定是否加入队列, 如果目标位置是 0 且 没有走过, 则加入队列.
+     *
+     * @param index
+     * @param maze
+     * @return
+     */
     private static boolean pushOrNot(Index index, char[][] maze) {
         boolean a = maze[index.getX()][index.getY()] == 0 || maze[index.getX()][index.getY()] == 48;
         boolean b = !INDEX_CONTAINER.containsKey(index);
@@ -166,6 +173,9 @@ public class Maze {
             MY_QUEUE.push(index);
             return true;
         }
+        // XXX 可能有错, 没测试
+        // 将 index 指向 null , 因为没有使用的必要了
+        index = null;
         return false;
     }
 
@@ -187,7 +197,6 @@ public class Maze {
         while (!stack.empty()) {
             System.out.println(stack.pop());
         }
-        System.exit(0);
     }
 
     public static void main(String[] args) throws Exception {
@@ -196,6 +205,7 @@ public class Maze {
         System.out.println("使用 txt 文件 (只支持 Windows CRLF 格式的换行) 输入迷宫还是使用内置迷宫? (1: txt 文件. 2: 内置迷宫):");
         int mazeSelect = sc.nextInt();
         if (OPTION1 == mazeSelect) {
+            System.out.println("输入错误的入口会导\"撞墙\"去找出口.");
             System.out.println("输入文件的绝对路径: ");
             String path = sc.next();
             maze = GetMaze.get(path);
@@ -204,17 +214,18 @@ public class Maze {
             System.out.println("输入迷宫入口纵坐标: ");
             int y = sc.nextInt();
             exec(new Index(x, y));
-        }
-        System.out.println("输入想要走的迷宫 (1 或 2), 输入其他字符都为 1:");
-        int flag = sc.nextInt();
-        if (OPTION1 == flag) {
-            maze = MAZE_1;
-            exec(new Index(0, 18));
-        } else if (OPTION2 == flag) {
-            maze = MAZE_2;
-            exec(new Index(0, 1));
         } else {
-            exec(new Index(0, 18));
+            System.out.println("输入想要走的迷宫 (1 或 2), 输入其他字符都为 1:");
+            int flag = sc.nextInt();
+            if (OPTION1 == flag) {
+                maze = MAZE_1;
+                exec(new Index(0, 18));
+            } else if (OPTION2 == flag) {
+                maze = MAZE_2;
+                exec(new Index(0, 1));
+            } else {
+                exec(new Index(0, 18));
+            }
         }
 
     }

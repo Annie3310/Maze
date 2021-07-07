@@ -24,7 +24,9 @@ public class GetMaze {
             x++;
         }
         File file1 = new File(path);
-        inputStreamReader = new FileReader(file1);
+        fileReader = new FileReader(file1);
+        // XXX 代码多余
+        inputStreamReader = fileReader;
         bufferedReader = new BufferedReader(inputStreamReader);
 
         char[][] maze = new char[x][y];
@@ -49,6 +51,9 @@ public class GetMaze {
             }
             System.out.print("\n");
         }
+        inputStreamReader.close();
+        bufferedReader.close();
+        fileReader.close();
         return maze;
     }
 }
