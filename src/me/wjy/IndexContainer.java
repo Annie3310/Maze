@@ -22,7 +22,7 @@ public class IndexContainer {
      * 使用 x 和 y 进行判断 (基于 Index 的 equals 方法),可以防止在 Maze 类中创建过多的对象
      * @param x 纵坐标
      * @param y 横坐标
-     * @return 是否存在
+     * @return 存在则返回该节点, 不存在返回 null
      */
     public Index containsKey(int x, int y) {
         Set<Index> indices = hashMap.keySet();
