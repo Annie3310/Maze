@@ -7,6 +7,7 @@ import java.util.Set;
 /**
  * 用来存储已经走过的格子
  * 基于 HashMap 实现, 使用 <Index, Integer>, 因为只需要 Key(需要 HashMap 的快速查找), 所以值都为 0
+ * 可使用 Set, 但是开发时为了将精力放在代码逻辑上,而不是处理可能存在的风险, 所以暂时用 HashMap, 等到项目完成之后改为 Set
  *
  * @author 王金义
  */

@@ -51,6 +51,8 @@ public class GetMaze {
             }
             System.out.print("\n");
         }
+
+
         inputStreamReader.close();
         bufferedReader.close();
         fileReader.close();
